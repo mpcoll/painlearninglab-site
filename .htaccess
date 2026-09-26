@@ -1,0 +1,21 @@
+# Apache configuration for painlearninglab.ca
+# (Only used on Apache servers. On Nginx or other hosts, see README.)
+
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+
+# Old Google Sites URLs -> new pages (so existing links and search results keep working)
+RedirectMatch 301 ^/accueilhome/eng/?$                /en/index.html
+RedirectMatch 301 ^/accueilhome/?$                    /fr/index.html
+RedirectMatch 301 ^/rechercheresearch/eng/?$          /en/research.html
+RedirectMatch 301 ^/rechercheresearch/?$              /fr/recherche.html
+RedirectMatch 301 ^/.{1,2}quipeteam/eng/?$            /en/team.html
+RedirectMatch 301 ^/.{1,2}quipeteam/?$                /fr/equipe.html
+RedirectMatch 301 ^/nous-joindrecontact-us/eng/?$     /en/contact.html
+RedirectMatch 301 ^/nous-joindrecontact-us/?$         /fr/nous-joindre.html
+RedirectMatch 301 ^/fr/?$                             /fr/index.html
+RedirectMatch 301 ^/en/?$                             /en/index.html
+
+# Keep the build script private
+RedirectMatch 404 ^/_build/
