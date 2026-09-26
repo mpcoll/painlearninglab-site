@@ -239,8 +239,8 @@ AXES = [
         "label": {"fr": "Axe 2", "en": "Axis 2"},
         "title": {"fr": "Oscillations neuronales et biomarqueurs de la douleur", "en": "Neural oscillations and biomarkers of pain"},
         "text": {
-            "fr": "Cet axe de recherche basé sur les données vise à créer et interpréter des biomarqueurs cérébraux sensibles, spécifiques et généralisables de la perception de la douleur, capables de prédire l'intensité de la douleur entre les individus et les modalités de douleur.",
-            "en": "This data-driven research axis aims to identify and interpret sensitive, specific, and generalizable brain biomarkers of pain perception that can predict pain intensity across individuals and pain modalities.",
+            "fr": "Cet axe de recherche basé sur les données étudie les oscillations cérébrales et les signaux physiologiques associés à la douleur, et les utilise pour développer des biomarqueurs généralisables entre les individus et les modalités de douleur.",
+            "en": "This data-driven research axis investigates the brain oscillations and physiological signals that accompany pain, and uses them to build biomarkers that generalize across individuals and pain modalities.",
         },
         "pubs": [
             ("2026", "No effect of rhythmic visual stimulation on experimental pain perception",
