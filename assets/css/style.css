@@ -322,6 +322,7 @@ a.lang-opt:hover { background: rgba(255,255,255,.1); color: #fff; }
   background: var(--abyss); color: #fff;
 }
 .page-head canvas { opacity: .6; }
+.page-head canvas.fmri { opacity: .9; }
 .page-head .wrap { padding: clamp(3rem, 7vw, 5rem) 0 clamp(2.5rem, 5vw, 3.5rem); }
 .page-head h1 { font-size: clamp(2.3rem, 5vw, 3.9rem); }
 .page-head p { margin: 0; max-width: 56ch; color: var(--on-dark); font-size: 1.15rem; }

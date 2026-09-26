@@ -164,7 +164,152 @@
     }
   }
 
-  function boot() { document.querySelectorAll('canvas.eeg').forEach(initEEG); }
+  /* ---- fMRI: MNI152 axial slices (z = 4, 36, 56 mm) with activation + BOLD time courses (decorative) ----
+     Slice from the ICBM 2009a nonlinear symmetric template, (c) 1993-2009 Louis Collins,
+     McConnell Brain Imaging Centre, Montreal Neurological Institute, McGill University. */
+  function initFMRI(canvas) {
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    var isStatic = reduce || canvas.hasAttribute('data-static');
+    var seed = +canvas.dataset.seed || 11;
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+    var ON = 10, PERIOD = 26, DT = .1, SPEED = 14;   // block design (s) and scroll speed (px/s)
+    // Canonical double-gamma HRF, sampled every DT seconds for 32 s
+    function gamma(t, a) { var f = 1; for (var i = 2; i < a; i++) f *= i; return Math.pow(t, a - 1) * Math.exp(-t) / f; }
+    var hrf = [];
+    for (var t = 0; t < 32; t += DT) hrf.push(gamma(t, 6) - gamma(t, 16) / 6);
+    // Steady-state response to the periodic block design, one period long
+    var n = Math.round(PERIOD / DT), bold = [], peak = 0;
+    for (var i = 0; i < n; i++) {
+      var v = 0;
+      for (var k = 0; k < hrf.length; k++) {
+        var tt = ((i - k) * DT % PERIOD + PERIOD) % PERIOD;
+        if (tt < ON) v += hrf[k];
+      }
+      bold.push(v); if (v > peak) peak = v;
+    }
+    bold = bold.map(function (v) { return v / peak; });
+    function boldAt(t, lag) {
+      var x = ((t - lag) / DT % n + n) % n, i0 = Math.floor(x), f = x - i0;
+      return bold[i0] * (1 - f) + bold[(i0 + 1) % n] * f;
+    }
+
+    // One region per slice; blobs at MNI coordinates (mm) on that slice
+    var regions = [
+      { label: 'aINS', z: 4, gain: 1, lag: 0, noise: [], blobs: [[36, 16], [-36, 16]], r: 9 },
+      { label: 'dACC', z: 36, gain: .85, lag: .6, noise: [], blobs: [[0, 14]], r: 9 },
+      { label: 'S1', z: 56, gain: .9, lag: .3, noise: [], blobs: [[48, -38]], r: 8 }
+    ];
+    // Sprite with the three slices side by side, all cropped to the same extent in MNI millimetres
+    var slice = new Image(), sliceReady = false;
+    var XMM = [-76, 77], YMM = [-111, 79], TILES = 3;
+    slice.onload = function () { sliceReady = true; if (isStatic) draw(staticTime()); };
+    slice.src = canvas.dataset.src;
+    regions.forEach(function (r) {
+      for (var k = 0; k < 4; k++) r.noise.push({ f: .05 + rnd() * .35, p: rnd() * 6.283, a: .05 + rnd() * .06 });
+    });
+    function signal(r, t) {
+      var v = r.gain * boldAt(t, r.lag);
+      r.noise.forEach(function (c) { v += c.a * Math.sin(6.283 * c.f * t + c.p); });
+      return v;
+    }
+
+    var W = 0, H = 0;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var r = canvas.getBoundingClientRect();
+      W = r.width; H = r.height;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+      var top = H * .08, bottom = H * .96, lane = (bottom - top) / regions.length;
+      var tileW = slice.width / TILES || 459, tileH = slice.height || 570;
+      var sh = lane * 1.12, sw = sh * tileW / tileH;          // each slice sits at the end of its lane
+      var sxc = W - Math.max(sw * .9, W * .06) - 18;           // slice column (centre x)
+      var tlRight = sxc - sw / 2 - 14;
+
+      // stimulation blocks (shaded) scrolling with the time courses
+      var t0 = t - tlRight / SPEED;
+      ctx.fillStyle = 'rgba(244,183,64,.13)';
+      for (var s = Math.floor(t0 / PERIOD) * PERIOD; s < t; s += PERIOD) {
+        var x0 = (s - t0) * SPEED, x1 = (s + ON - t0) * SPEED;
+        ctx.fillRect(Math.max(0, x0), top, Math.min(tlRight, x1) - Math.max(0, x0), bottom - top);
+      }
+
+      ctx.font = '600 11px Archivo, Arial, sans-serif';
+      regions.forEach(function (r, i) {
+        var yc = top + lane * (i + .5), y0 = yc + lane * .22, amp = lane * .42;
+        // BOLD time course
+        ctx.lineWidth = 1.8; ctx.lineJoin = 'round';
+        ctx.strokeStyle = 'rgba(95,227,210,.85)';
+        ctx.beginPath();
+        for (var x = 0; x <= tlRight; x += 2) {
+          var y = y0 - signal(r, t0 + x / SPEED) * amp;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(207,227,234,.8)'; ctx.textAlign = 'right';
+        ctx.fillText(r.label, tlRight - 6, yc - lane * .3);
+        if (!sliceReady) return;
+
+        // MNI slice for this region, with its activation
+        var sx0 = sxc - sw / 2, sy0 = yc - sh / 2;
+        var mmx = function (x) { return sx0 + (x - XMM[0]) / (XMM[1] - XMM[0]) * sw; };
+        var mmy = function (y) { return sy0 + (YMM[1] - y) / (YMM[1] - YMM[0]) * sh; };
+        var pxmm = sw / (XMM[1] - XMM[0]);
+        ctx.globalAlpha = .6;
+        ctx.drawImage(slice, i * tileW, 0, tileW, tileH, sx0, sy0, sw, sh);
+        ctx.globalAlpha = 1;
+        var v = Math.max(0, Math.min(1.1, signal(r, t)));
+        ctx.globalCompositeOperation = 'lighter';
+        r.blobs.forEach(function (b) {
+          var bx = mmx(b[0]), by = mmy(b[1]), br = Math.max(3, r.r * pxmm * (.75 + .5 * v));
+          var gg = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+          gg.addColorStop(0, 'rgba(255,236,120,' + (.95 * v) + ')');
+          gg.addColorStop(.45, 'rgba(244,120,40,' + (.75 * v) + ')');
+          gg.addColorStop(1, 'rgba(210,40,30,0)');
+          ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bx, by, br, 0, 6.2832); ctx.fill();
+        });
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = 'rgba(207,227,234,.55)'; ctx.textAlign = 'left';
+        ctx.fillText('z = ' + r.z, sx0 + sw + 4, sy0 + sh - 4);
+        // a thin connector from the time course into the slice
+        ctx.strokeStyle = 'rgba(95,227,210,.35)'; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+        ctx.beginPath(); ctx.moveTo(tlRight + 2, y0 - signal(r, t) * amp); ctx.lineTo(mmx(r.blobs[0][0]), mmy(r.blobs[0][1])); ctx.stroke();
+        ctx.setLineDash([]);
+      });
+    }
+
+    function staticTime() { return 3 * PERIOD + ON + 3; }   // a frame near the response peak
+    resize();
+    if (isStatic) {
+      draw(staticTime());
+      window.addEventListener('resize', function () { resize(); draw(staticTime()); });
+      return;
+    }
+    var running = true, raf = 0, start = performance.now() / 1000 - staticTime();
+    function loop(ms) { draw(ms / 1000 - start); if (running) raf = requestAnimationFrame(loop); }
+    function setRunning(on) {
+      if (on === running) return;
+      running = on;
+      if (on) raf = requestAnimationFrame(loop); else cancelAnimationFrame(raf);
+    }
+    raf = requestAnimationFrame(loop);
+    window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', function () { setRunning(!document.hidden); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) { setRunning(entries[0].isIntersecting && !document.hidden); }).observe(canvas);
+    }
+  }
+
+  function boot() {
+    document.querySelectorAll('canvas.eeg').forEach(initEEG);
+    document.querySelectorAll('canvas.fmri').forEach(initFMRI);
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot); else boot();
   // Figure carousels: advance every few seconds, pause on hover/focus, never autoplay with reduced motion.
   document.querySelectorAll('.carousel').forEach(function (c) {

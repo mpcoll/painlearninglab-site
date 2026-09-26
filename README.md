@@ -25,18 +25,22 @@ French is the default.
 ## Images
 
 Already in place: the lab logo (header and favicon), the Université Laval and Cirris logos (footer), the six funder
-logos, the three equipment photos, and portraits of Michel-Pierre Coll, Alyson Champagne, Mégane Lacombe-Thibault, Shima Hassanpour, Joshua Duquette, Antoine Cyr-Bouchard and Pouya Rabiei.
+logos, the three equipment photos, and portraits of Michel-Pierre Coll, Alyson Champagne, Mégane Lacombe-Thibault, Shima Hassanpour, Joshua Duquette, Antoine Cyr-Bouchard, Pouya Rabiei and Alysun Paradis.
 
 Still missing (a styled placeholder shows until the file exists). Save them with these exact names:
 
 - `assets/img/team/`: leane-beaulieu-laliberte.jpg, nicolas-roy.jpg, sanoussy-diallo.jpg,
   audrey-lalancette.jpg, lorie-eve-barrette.jpg,
-  laurie-caumartin.jpg, alysun-paradis.jpg
+  laurie-caumartin.jpg
   (square or portrait works, at least 600 px wide; faces are framed slightly above centre)
 
 Funder logos live in `assets/img/funders/` (svg, png or jpg). A language-specific file (e.g. `cihr-fr.png`)
 takes priority over a shared one (e.g. `cihr.png`); the funder's name is shown as text if no logo exists.
 Logo changes require running `python3 _build/build.py`.
+
+The fMRI header on the Research and Team pages (`assets/img/mri-slices.png`, axial slices z = 4, 36 and 56 mm) comes from the
+ICBM 2009a nonlinear symmetric MNI152 template, Copyright (C) 1993-2009 Louis Collins, McConnell Brain Imaging
+Centre, Montreal Neurological Institute, McGill University (used under the template's permissive licence).
 
 ## Editing content
 

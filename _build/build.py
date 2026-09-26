@@ -189,6 +189,13 @@ def page(lang, key, title, desc, body):
 <meta property="og:description" content="{escape(desc)}">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{"fr_CA" if lang == "fr" else "en_CA"}">
+<meta property="og:url" content="{SITE_URL}/{lang}/{f_self}">
+<meta property="og:site_name" content="{LAB[lang]}">
+<meta property="og:image" content="{SITE_URL}/assets/img/og-{lang}.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{LAB[lang]}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#071E33">
 <meta name="color-scheme" content="light dark">
 <script>try{{var t=localStorage.getItem('pll-theme');if(t)document.documentElement.dataset.theme=t;}}catch(e){{}}</script>
@@ -211,12 +218,12 @@ def page(lang, key, title, desc, body):
 '''
 
 
-def page_head(title, intro, jumps=None, labels="Fz Cz Pz C4", seed=11):
+def page_head(title, intro, jumps=None, labels="Fz Cz Pz C4", seed=11, kind="eeg"):
     j = ""
     if jumps:
         j = '<ul class="jump">' + "".join(f'<li><a href="#{i}">{l}</a></li>' for i, l in jumps) + "</ul>"
     return f'''<section class="page-head">
-  <canvas class="eeg" data-static data-labels="{labels}" data-seed="{seed}" aria-hidden="true"></canvas>
+  {f'<canvas class="fmri" data-src="../assets/img/mri-slices.png" data-seed="{seed}" aria-hidden="true"></canvas>' if kind == "fmri" else f'<canvas class="eeg" data-static data-labels="{labels}" data-seed="{seed}" aria-hidden="true"></canvas>'}
   <div class="wrap">
     <h1>{title}</h1>
     <p>{intro}</p>
@@ -788,7 +795,7 @@ def research(lang):
     )
     funders = funders_list(lang)
 
-    body = f'''{page_head(t["title"], t["intro"], t["jumps"], "Fz Cz CPz Pz C4", 11)}
+    body = f'''{page_head(t["title"], t["intro"], t["jumps"], "Fz Cz CPz Pz C4", 11, "fmri")}
 
 <section class="section">
   <div class="wrap">
@@ -864,7 +871,7 @@ def team(lang):
         for nf, ne, wf, we in ALUMNI
     )
 
-    body = f'''{page_head(t["title"], t["intro"], t["jumps"], "C3 Cz C4", 23)}
+    body = f'''{page_head(t["title"], t["intro"], t["jumps"], "C3 Cz C4", 23, "fmri")}
 
 <section class="section" id="director">
   <div class="wrap pi">
@@ -986,6 +993,15 @@ ROOT_INDEX = '''<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="alternate" hreflang="fr" href="https://www.painlearninglab.ca/fr/index.html">
 <link rel="alternate" hreflang="en" href="https://www.painlearninglab.ca/en/index.html">
+<meta name="description" content="Laboratoire apprentissage et douleur / Pain and Learning Lab, Université Laval et Cirris.">
+<meta property="og:title" content="Laboratoire apprentissage et douleur / Pain and Learning Lab">
+<meta property="og:description" content="Imagerie cérébrale, modélisation computationnelle et IA pour comprendre la douleur. Human brain imaging, computational modelling and AI to understand pain.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.painlearninglab.ca/">
+<meta property="og:image" content="https://www.painlearninglab.ca/assets/img/og-fr.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <script>
   var l = 'fr';
   try { if (localStorage.getItem('pll-lang') === 'en') l = 'en'; } catch (e) {}
