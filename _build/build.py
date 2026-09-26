@@ -54,6 +54,13 @@ MARK_SVG = (
     'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 )
 
+THEME_SVG = ('<svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" '
+             'fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'
+             '<svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" '
+             'stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8'
+             'M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" '
+             'stroke-linecap="round"/></svg>')
+
 MENU_SVG = ('<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" '
             'stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>')
 
@@ -61,6 +68,7 @@ T = {  # UI strings
     "skip": {"fr": "Passer au contenu", "en": "Skip to content"},
     "nav": {"fr": "Navigation principale", "en": "Main navigation"},
     "menu": {"fr": "Menu", "en": "Menu"},
+    "theme": {"fr": "Mode sombre", "en": "Dark mode"},
     "lang_group": {"fr": "Langue / Language", "en": "Language / Langue"},
     "other_title": {"fr": "English version", "en": "Version française"},
     "brand_small": {"fr": "Laboratoire", "en": "Université Laval"},
@@ -133,6 +141,7 @@ def header(lang, key):
       <span class="lang-opt is-current" lang="{lang}">{lang.upper()}</span>
       <a class="lang-opt" href="../{o}/{file_for(key, o)}" hreflang="{o}" lang="{o}" data-lang="{o}" title="{T["other_title"][lang]}">{o.upper()}</a>
     </div>
+    <button class="theme-btn" type="button" aria-pressed="false" aria-label="{T["theme"][lang]}" title="{T["theme"][lang]}">{THEME_SVG}</button>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="{T["menu"][lang]}">{MENU_SVG}<span>{T["menu"][lang]}</span></button>
   </div>
 </header>'''
@@ -181,6 +190,8 @@ def page(lang, key, title, desc, body):
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{"fr_CA" if lang == "fr" else "en_CA"}">
 <meta name="theme-color" content="#071E33">
+<meta name="color-scheme" content="light dark">
+<script>try{{var t=localStorage.getItem('pll-theme');if(t)document.documentElement.dataset.theme=t;}}catch(e){{}}</script>
 <link rel="icon" href="../assets/img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">

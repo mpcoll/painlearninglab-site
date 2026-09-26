@@ -2,6 +2,23 @@
 (function () {
   'use strict';
 
+  /* ---- Dark mode toggle: overrides the system setting and is remembered ---- */
+  var themeBtn = document.querySelector('.theme-btn');
+  if (themeBtn) {
+    var root = document.documentElement;
+    var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    var isDark = function () { return root.dataset.theme ? root.dataset.theme === 'dark' : !!(sysDark && sysDark.matches); };
+    var sync = function () { themeBtn.setAttribute('aria-pressed', isDark() ? 'true' : 'false'); };
+    themeBtn.addEventListener('click', function () {
+      var next = isDark() ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('pll-theme', next); } catch (e) {}
+      sync();
+    });
+    if (sysDark && sysDark.addEventListener) sysDark.addEventListener('change', sync);
+    sync();
+  }
+
   /* ---- Language switch: remember choice and keep the same section ---- */
   document.querySelectorAll('a[data-lang]').forEach(function (a) {
     a.addEventListener('click', function () {
