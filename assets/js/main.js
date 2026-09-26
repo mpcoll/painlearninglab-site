@@ -149,4 +149,29 @@
 
   function boot() { document.querySelectorAll('canvas.eeg').forEach(initEEG); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot); else boot();
+  // Figure carousels: advance every few seconds, pause on hover/focus, never autoplay with reduced motion.
+  document.querySelectorAll('.carousel').forEach(function (c) {
+    var slides = c.querySelectorAll('.slide'), dots = c.querySelectorAll('.dot');
+    if (slides.length < 2) return;
+    var i = 0, timer = null, paused = false, DELAY = 6000;
+    function show(n) {
+      slides[i].hidden = true; dots[i].removeAttribute('aria-current');
+      i = (n + slides.length) % slides.length;
+      slides[i].hidden = false; slides[i].classList.remove('is-in'); void slides[i].offsetWidth; slides[i].classList.add('is-in');
+      dots[i].setAttribute('aria-current', 'true');
+      var next = slides[(i + 1) % slides.length].querySelector('img');
+      if (next) next.loading = 'eager';
+    }
+    function start() { if (reduce || paused || timer) return; timer = setInterval(function () { show(i + 1); }, DELAY); }
+    function stop() { clearInterval(timer); timer = null; }
+    c.querySelector('.prev').addEventListener('click', function () { stop(); show(i - 1); start(); });
+    c.querySelector('.next').addEventListener('click', function () { stop(); show(i + 1); start(); });
+    dots.forEach(function (d, k) { d.addEventListener('click', function () { stop(); show(k); start(); }); });
+    c.addEventListener('mouseenter', function () { paused = true; stop(); });
+    c.addEventListener('mouseleave', function () { paused = false; start(); });
+    c.addEventListener('focusin', function () { paused = true; stop(); });
+    c.addEventListener('focusout', function () { paused = false; start(); });
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+    start();
+  });
 })();

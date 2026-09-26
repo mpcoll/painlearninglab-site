@@ -211,8 +211,8 @@ AXES = [
     {
         "id": "axis-1",
         "label": {"fr": "Axe 1", "en": "Axis 1"},
-        "title": {"fr": "Architectures computationnelles et neuronales de la douleur",
-                  "en": "Computational and neural architectures of pain"},
+        "title": {"fr": "Modèles computationnels de l'apprentissage et de la décision liés à la douleur",
+                  "en": "Computational models of pain learning and decision-making"},
         "text": {
             "fr": "Cet axe de recherche théorique vise à identifier des architectures computationnelles et neuronales cohérentes capables d'expliquer et de prédire la perception de la douleur et l'évitement de la douleur.",
             "en": "This theoretical research axis aims to identify coherent computational and neural architectures that can explain and predict pain perception and pain avoidance.",
@@ -230,16 +230,19 @@ AXES = [
     {
         "id": "axis-2",
         "label": {"fr": "Axe 2", "en": "Axis 2"},
-        "title": {"fr": "Biomarqueurs cérébraux de la douleur", "en": "Brain biomarkers of pain"},
+        "title": {"fr": "Oscillations neuronales et biomarqueurs de la douleur", "en": "Neural oscillations and biomarkers of pain"},
         "text": {
             "fr": "Cet axe de recherche basé sur les données vise à créer et interpréter des biomarqueurs cérébraux sensibles, spécifiques et généralisables de la perception de la douleur, capables de prédire l'intensité de la douleur entre les individus et les modalités de douleur.",
             "en": "This data-driven research axis aims to identify and interpret sensitive, specific, and generalizable brain biomarkers of pain perception that can predict pain intensity across individuals and pain modalities.",
         },
         "pubs": [
+            ("2026", "No effect of rhythmic visual stimulation on experimental pain perception",
+             "Roy, N., Deslauriers, C., Côté-Cazes, T., Etcheverry, A., &amp; Coll, M.-P.", "<i>Pain</i>, 167(9), e441–e452",
+             "10.1097/j.pain.0000000000004044"),
             ("2025", "Towards Generalizable Learning Models for EEG-Based Identification of Pain Perception",
              "Rezzouk, M., Gagnon, F., Champagne, A., Roy, M., Albouy, P., Coll, M.-P., &amp; Subakan, C.",
              "<i>2025 IEEE 35th International Workshop on Machine Learning for Signal Processing (MLSP)</i>, 1–6",
-             "10.1109/MLSP62443.2025.11204206"),
+             "10.1109/MLSP62443.2025.11204206", "https://arxiv.org/abs/2508.11691"),
         ],
         "upcoming": [  # (year, title, authors, note or None); listed before published work
             ("2026", "A comprehensive physiological dataset of pain and aversive modalities for pain biomarkers research",
@@ -373,6 +376,58 @@ FUNDERS = [
     ("braincanada", {"fr": ("Brain Canada", "Fondation Brain Canada"), "en": ("Brain Canada", "Brain Canada Foundation")},
      {"fr": "https://braincanada.ca/fr/", "en": "https://braincanada.ca/"}),
 ]
+
+
+# Figures shown in the carousel under each research axis (file in assets/img/figures/).
+# (file, figure number, paper key); licences: J Pain = CC BY 4.0, PNAS = CC BY-NC-ND 4.0 (shown unaltered),
+# Pain 2024 = figures from the bioRxiv preprint (doi:10.1101/2023.07.14.549006); Pain 2026 = CC BY-NC-ND 4.0;
+# MLSP 2025 = figures cropped from the arXiv version. The doi slot may also hold a full URL.
+FIG_PAPERS = {
+    "jpain2025": ("Expectations and uncertainty shape pain perception during learning", "<i>The Journal of Pain</i>, 2025",
+                  "10.1016/j.jpain.2025.105569", "CC BY 4.0"),
+    "pain2024": ("Pain reflects the informational value of nociceptive inputs", "<i>Pain</i>, 2024 (bioRxiv preprint)",
+                 "10.1101/2023.07.14.549006", None),
+    "pnas2022": ("The neural signature of the decision value of future pain", "<i>PNAS</i>, 2022",
+                 "10.1073/pnas.2119931119", "CC BY-NC-ND 4.0"),
+    "pain2026": ("No effect of rhythmic visual stimulation on experimental pain perception", "<i>Pain</i>, 2026",
+                 "10.1097/j.pain.0000000000004044", "CC BY-NC-ND 4.0"),
+    "mlsp2025": ("Towards Generalizable Learning Models for EEG-Based Identification of Pain Perception",
+                 "IEEE MLSP, 2025 (arXiv preprint)", "https://arxiv.org/abs/2508.11691", None),
+}
+FIGURES = {
+    "axis-1": [
+        ("jpain2025-fig2.jpg", 2, "jpain2025"), ("jpain2025-fig3.jpg", 3, "jpain2025"),
+        ("pain2024-fig3.jpg", 3, "pain2024"), ("pain2024-fig4.jpg", 4, "pain2024"),
+        ("pnas2022-fig1.jpg", 1, "pnas2022"), ("pnas2022-fig2.jpg", 2, "pnas2022"), ("pnas2022-fig7.jpg", 7, "pnas2022"),
+    ],
+    "axis-2": [
+        ("pain2026-fig1.jpg", 1, "pain2026"), ("pain2026-fig2.jpg", 2, "pain2026"), ("pain2026-fig4.jpg", 4, "pain2026"),
+        ("mlsp2025-fig1.jpg", 1, "mlsp2025"), ("mlsp2025-fig2.jpg", 2, "mlsp2025"),
+    ],
+}
+
+
+def carousel(axis_id, lang):
+    slides = FIGURES.get(axis_id)
+    if not slides:
+        return ""
+    t = {"fr": ("Figures tirées de nos publications", "Figure", "Figure précédente", "Figure suivante", "Aller à la figure", "Licence"),
+         "en": ("Figures from our publications", "Figure", "Previous figure", "Next figure", "Go to figure", "Licence")}[lang]
+    items, dots = [], []
+    for i, (f, n, key) in enumerate(slides):
+        title, venue, doi, lic = FIG_PAPERS[key]
+        credit = f' · {t[5]} {lic}' if lic else ""
+        items.append(f'''<figure class="slide"{"" if i == 0 else " hidden"} aria-roledescription="slide" aria-label="{i + 1} / {len(slides)}">
+          <div class="slide-img"><img src="../assets/img/figures/{f}" alt="{t[1]} {n}, {escape(title)}" loading="lazy"></div>
+          <figcaption><strong>{t[1]} {n}</strong> · <a href="{doi if doi.startswith("http") else "https://doi.org/" + doi}">{title}</a>. {venue}{credit}</figcaption>
+        </figure>''')
+        cur = ' aria-current="true"' if i == 0 else ""
+        dots.append(f'<button type="button" class="dot"{cur} aria-label="{t[4]} {i + 1}"></button>')
+    return f'''<div class="carousel" aria-roledescription="carousel" aria-label="{t[0]}">
+      <div class="slides" aria-live="off">{"".join(items)}</div>
+      <div class="carousel-nav"><button type="button" class="prev" aria-label="{t[2]}">‹</button>
+        <div class="dots">{"".join(dots)}</div><button type="button" class="next" aria-label="{t[3]}">›</button></div>
+    </div>'''
 
 
 def funder_logo(slug, lang):
@@ -686,14 +741,15 @@ def research(lang):
         )
         pubs += "".join(
             f'''<li class="pub"><span class="pub-year">{y}</span><div>
-          <a class="pub-title" href="https://doi.org/{doi}">{title}</a>
+          <a class="pub-title" href="{link[0] if link else "https://doi.org/" + doi}">{title}</a>
           <span class="pub-meta">{authors} {src}. doi:{doi}</span></div></li>'''
-            for y, title, authors, src, doi in a["pubs"]
+            for y, title, authors, src, doi, *link in a["pubs"]  # optional 6th item: link overriding the DOI
         )
         blocks.append(f'''<div class="axis-block split" id="{a["id"]}">
     <div>
       <span class="axis-label">{a["label"][lang]}</span>
       <h2>{a["title"][lang]}</h2>
+      {carousel(a["id"], lang)}
     </div>
     <div>
       <p class="lede">{a["text"][lang]}</p>
