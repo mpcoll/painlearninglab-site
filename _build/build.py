@@ -218,12 +218,12 @@ def page(lang, key, title, desc, body):
 '''
 
 
-def page_head(title, intro, jumps=None, labels="Fz Cz Pz C4", seed=11, kind="eeg"):
+def page_head(title, intro, jumps=None, labels="Fz Cz Pz C4", seed=11, kind="eeg", live=False):
     j = ""
     if jumps:
         j = '<ul class="jump">' + "".join(f'<li><a href="#{i}">{l}</a></li>' for i, l in jumps) + "</ul>"
     return f'''<section class="page-head">
-  {f'<canvas class="fmri" data-src="../assets/img/mri-slices.png" data-seed="{seed}" aria-hidden="true"></canvas>' if kind == "fmri" else f'<canvas class="eeg" data-static data-labels="{labels}" data-seed="{seed}" aria-hidden="true"></canvas>'}
+  {f'<canvas class="fmri" data-src="../assets/img/mri-slices.png" data-seed="{seed}" aria-hidden="true"></canvas>' if kind == "fmri" else f'<canvas class="eeg"{"" if live else " data-static"} data-labels="{labels}" data-seed="{seed}" aria-hidden="true"></canvas>'}
   <div class="wrap">
     <h1>{title}</h1>
     <p>{intro}</p>
@@ -950,7 +950,7 @@ def contact(lang):
         for p in PLACES
     )
 
-    body = f'''{page_head(t["title"], t["intro"], None, "Fz Cz Pz", 5)}
+    body = f'''{page_head(t["title"], t["intro"], None, "Fz Cz Pz", 5, live=True)}
 
 <section class="section section-mist">
   <div class="wrap paths">
