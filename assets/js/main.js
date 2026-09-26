@@ -169,7 +169,12 @@
     dots.forEach(function (d, k) { d.addEventListener('click', function () { stop(); show(k); start(); }); });
     c.addEventListener('mouseenter', function () { paused = true; stop(); });
     c.addEventListener('mouseleave', function () { paused = false; start(); });
-    c.addEventListener('focusin', function () { paused = true; stop(); });
+    // Pause for keyboard users only: a mouse click on an arrow also focuses it, and should not stop autoplay.
+    c.addEventListener('focusin', function (e) {
+      var kb = true;
+      try { kb = e.target.matches(':focus-visible'); } catch (err) {}
+      if (kb) { paused = true; stop(); }
+    });
     c.addEventListener('focusout', function () { paused = false; start(); });
     document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
     start();

@@ -6,6 +6,7 @@ Usage (optional):  python3 _build/build.py
 You can also edit the generated HTML files directly; but if you do,
 don't run this script afterwards or it will overwrite your edits.
 """
+import hashlib
 import os
 import re
 from html import escape
@@ -73,6 +74,12 @@ T = {  # UI strings
     },
 }
 
+
+
+def asset_version(path):
+    """Short content hash appended to CSS/JS links so browsers fetch new versions right after an update."""
+    with open(os.path.join(ROOT, path), "rb") as f:
+        return hashlib.md5(f.read()).hexdigest()[:8]
 
 def other(lang):
     return "en" if lang == "fr" else "fr"
@@ -175,8 +182,8 @@ def page(lang, key, title, desc, body):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
-<link rel="stylesheet" href="../assets/css/style.css">
-<script defer src="../assets/js/main.js"></script>
+<link rel="stylesheet" href="../assets/css/style.css?v={asset_version("assets/css/style.css")}">
+<script defer src="../assets/js/main.js?v={asset_version("assets/js/main.js")}"></script>
 </head>
 <body>
 {header(lang, key)}
