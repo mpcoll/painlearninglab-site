@@ -243,8 +243,7 @@ AXES = [
         ],
         "upcoming": [  # (year, title, authors, note or None); listed before published work
             ("2026", "A comprehensive physiological dataset of pain and aversive modalities for pain biomarkers research",
-             "Champagne, A.*, Barrette, L.-E.*, Cyr-Bouchard, A., Roy, M., &amp; Coll, M.-P.",
-             {"fr": "(* Contribution égale)", "en": "(* Equal contribution)"}),
+             "Champagne, A., Barrette, L.-E., Cyr-Bouchard, A., Roy, M., &amp; Coll, M.-P.", None),
             ("2026", "Distinct EEG microstate signatures across different pain types",
              "Rabiei, P., Champagne, A., Barrette, L.-È., Fakhry, N., Massé-Alarie, H., &amp; Coll, M.-P.", None),
         ],
