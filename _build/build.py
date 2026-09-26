@@ -241,10 +241,13 @@ AXES = [
              "<i>2025 IEEE 35th International Workshop on Machine Learning for Signal Processing (MLSP)</i>, 1–6",
              "10.1109/MLSP62443.2025.11204206"),
         ],
-        "extra": {
-            "fr": ("Base de données neurophysiologiques sur la douleur et les expériences aversives pour l'étude des biomarqueurs de la douleur (N = 100)", "Bientôt disponible"),
-            "en": ("Neurophysiological database on pain and aversive experiences for the study of pain biomarkers (N = 100)", "Coming soon"),
-        },
+        "upcoming": [  # (year, title, authors, note or None); listed before published work
+            ("2026", "A comprehensive physiological dataset of pain and aversive modalities for pain biomarkers research",
+             "Champagne, A.*, Barrette, L.-E.*, Cyr-Bouchard, A., Roy, M., &amp; Coll, M.-P.",
+             {"fr": "(* Contribution égale)", "en": "(* Equal contribution)"}),
+            ("2026", "Distinct EEG microstate signatures across different pain types",
+             "Rabiei, P., Champagne, A., Barrette, L.-È., Fakhry, N., Massé-Alarie, H., &amp; Coll, M.-P.", None),
+        ],
     },
 ]
 
@@ -310,7 +313,7 @@ STUDENTS = [
       "en": "Research Assistant 2025<br>Ph.D. Clinical Psychology 2025–"},
      {"fr": "Prédiction des signatures neuronales de la douleur à partir des oscillations EEG",
       "en": "Predicting Neural Signatures of Pain Using EEG Oscillations"}),
-    ("pouya-rabei", "Pouya Rabei",
+    ("pouya-rabiei", "Pouya Rabiei",
      {"fr": "Ph. D. Sciences biomédicales<br>Codirection : Hugo Massé-Alarie",
       "en": "Ph.D. Biomedical Sciences<br>Co-supervision: Hugo Massé-Alarie"},
      {"fr": "Prédiction de la transition vers la douleur chronique : étude des variables comportementales et neuronales",
@@ -326,8 +329,12 @@ STAFF = [
     ("antoine-cyr-bouchard", "Antoine Cyr-Bouchard",
      {"fr": "Professionnel de recherche 2026–<br>Auxiliaire de recherche 2023–2025<br>Ph. D. Psychologie clinique A2025",
       "en": "Research Professional 2026–<br>Research Assistant 2023–2025<br>Ph.D. Clinical Psychology A2025"}),
-    ("lorie-eve-barette", "Lorie-Ève Barette",
-     {"fr": "Auxiliaire de recherche 2025–", "en": "Research Assistant 2025–"}),
+    ("lorie-eve-barrette", "Lorie-Ève Barrette",
+     {"fr": "Auxiliaire de recherche 2025–<br>Baccalauréat en psychologie 2024–",
+      "en": "Research Assistant 2025–<br>Undergraduate in Psychology 2024–"}),
+    ("alysun-paradis", "Alysun Paradis",
+     {"fr": "Auxiliaire de recherche 2026–<br>Baccalauréat en psychologie 2025–",
+      "en": "Research Assistant 2026–<br>Undergraduate in Psychology 2025–"}),
 ]
 
 ALUMNI = [  # (names fr, names en, what fr, what en) - most recent first
@@ -419,6 +426,107 @@ def participate_band(lang, with_id=False):
 </section>'''
 
 
+# ---------------- Approach diagram ----------------
+
+APPROACH = {
+    "fr": {"h": "Notre approche", "human": ["Apprentissage", "humain"], "machine": ["Apprentissage", "automatique"],
+           "goal_wide": ["Comprendre et prédire la perception", "de la douleur aiguë et clinique"],
+           "goal_narrow": ["Comprendre et prédire", "la perception de la douleur", "aiguë et clinique"],
+           "desc": "L'apprentissage humain et l'apprentissage automatique s'éclairent mutuellement pour comprendre et prédire la perception de la douleur aiguë et clinique."},
+    "en": {"h": "Our approach", "human": ["Human", "learning"], "machine": ["Machine", "learning"],
+           "goal_wide": ["Understand and predict", "acute and clinical pain perception"],
+           "goal_narrow": ["Understand and predict", "acute and clinical", "pain perception"],
+           "desc": "Human learning and machine learning inform each other to understand and predict acute and clinical pain perception."},
+}
+
+
+def _network(x, y, k=1.0):
+    """Small neural-network glyph (2 inputs, 5 hidden, 1 output) centred on x, y."""
+    ins = [(x - 24 * k, y + d * k) for d in (-12, 12)]
+    hid = [(x, y + d * k) for d in (-24, -12, 0, 12, 24)]
+    out = [(x + 24 * k, y)]
+    lines = "".join(f'<line x1="{a:.1f}" y1="{b:.1f}" x2="{c:.1f}" y2="{d:.1f}"/>'
+                    for (a, b) in ins for (c, d) in hid)
+    lines += "".join(f'<line x1="{a:.1f}" y1="{b:.1f}" x2="{c:.1f}" y2="{d:.1f}"/>'
+                     for (a, b) in hid for (c, d) in out)
+    r = 3.4 * k
+    nodes = "".join(f'<circle class="n-in" cx="{a:.1f}" cy="{b:.1f}" r="{r:.1f}"/>' for a, b in ins + out)
+    nodes += "".join(f'<circle class="n-hid" cx="{a:.1f}" cy="{b:.1f}" r="{r:.1f}"/>' for a, b in hid)
+    return f'<g class="net">{lines}{nodes}</g>'
+
+
+def _head(cx, cy, k=1.0):
+    """Head in profile (facing right) with a network inside; box ~110x110 centred on cx, cy."""
+    path = ("M32,108 L32,90 C15,82 6,64 8,45 C10,20 30,3 55,3 C80,3 96,20 96,42 "
+            "L96,50 L105,64 L96,68 L97,74 L94,77 L96,82 C96,90 89,93 80,92 L72,91 L72,108")
+    return (f'<g transform="translate({cx - 55 * k:.1f},{cy - 55 * k:.1f}) scale({k})">'
+            f'<path class="icon-line" d="{path}"/>{_network(52, 44)}</g>')
+
+
+def _monitor(cx, cy, k=1.0):
+    return (f'<g transform="translate({cx - 62 * k:.1f},{cy - 50 * k:.1f}) scale({k})">'
+            '<rect class="icon-fill" x="0" y="0" width="124" height="80" rx="7"/>'
+            '<rect class="screen" x="7" y="7" width="110" height="60" rx="2"/>'
+            '<path class="icon-fill" d="M50,80 L74,80 L78,96 L46,96 Z"/>'
+            '<rect class="icon-fill" x="36" y="95" width="52" height="5" rx="2.5"/>'
+            f'{_network(62, 37)}</g>')
+
+
+def _lines(x, y, lines, gap):
+    y0 = y - gap * (len(lines) - 1) / 2
+    return "".join(f'<tspan x="{x}" y="{y0 + i * gap:.1f}">{l}</tspan>' for i, l in enumerate(lines))
+
+
+def approach_svg(lang, narrow):
+    t = APPROACH[lang]
+    uid = f"ap-{lang}-{'n' if narrow else 'w'}"
+    defs = (f'<defs><marker id="{uid}-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" '
+            f'markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 Z" class="arrowhead"/></marker></defs>')
+    m = f'marker-end="url(#{uid}-arr)"'
+    ms = f'marker-start="url(#{uid}-arr)" {m}'
+    if not narrow:
+        vb, fs, gfs = "0 0 960 470", 23, 22
+        body = (
+            _head(200, 68) + _monitor(760, 72) +
+            '<rect class="card human" x="30" y="140" width="340" height="92" rx="10"/>'
+            f'<text class="lbl" x="200" y="188" font-size="{fs}">{" ".join(t["human"])}</text>'
+            '<rect class="card machine" x="590" y="140" width="340" height="92" rx="10"/>'
+            f'<text class="lbl" x="760" y="188" font-size="{fs}">{" ".join(t["machine"])}</text>'
+            f'<line class="link" x1="378" y1="186" x2="582" y2="186" {ms}/>'
+            f'<path class="link" d="M200,240 C200,330 215,392 250,392" {m}/>'
+            f'<path class="link" d="M760,240 C760,330 745,392 710,392" {m}/>'
+            '<rect class="card goal" x="260" y="338" width="440" height="108" rx="10"/>'
+            f'<text class="lbl lbl-goal" font-size="{gfs}">{_lines(480, 392, t["goal_wide"], 30)}</text>'
+        )
+    else:
+        vb, fs, gfs = "0 0 360 470", 17, 17
+        body = (
+            _head(82, 50, .62) + _monitor(278, 52, .62) +
+            '<rect class="card human" x="6" y="104" width="152" height="78" rx="9"/>'
+            f'<text class="lbl" font-size="{fs}">{_lines(82, 143, t["human"], 21)}</text>'
+            '<rect class="card machine" x="202" y="104" width="152" height="78" rx="9"/>'
+            f'<text class="lbl" font-size="{fs}">{_lines(278, 143, t["machine"], 21)}</text>'
+            f'<line class="link" x1="163" y1="143" x2="197" y2="143" {ms}/>'
+            f'<path class="link" d="M82,188 C82,250 150,250 150,300" {m}/>'
+            f'<path class="link" d="M278,188 C278,250 210,250 210,300" {m}/>'
+            '<rect class="card goal" x="30" y="306" width="300" height="118" rx="10"/>'
+            f'<text class="lbl lbl-goal" font-size="{gfs}">{_lines(180, 365, t["goal_narrow"], 25)}</text>'
+        )
+    cls = "approach-narrow" if narrow else "approach-wide"
+    return (f'<svg class="approach-svg {cls}" viewBox="{vb}" role="img" aria-labelledby="{uid}-t">'
+            f'<title id="{uid}-t">{t["desc"]}</title>{defs}{body}</svg>')
+
+
+def approach_section(lang):
+    t = APPROACH[lang]
+    return f'''<section class="section section-mist approach">
+  <div class="wrap">
+    <h2>{t["h"]}</h2>
+    <figure class="approach-fig">{approach_svg(lang, False)}{approach_svg(lang, True)}</figure>
+  </div>
+</section>'''
+
+
 # ---------------- Home ----------------
 
 def home(lang):
@@ -482,6 +590,8 @@ def home(lang):
     </div>
   </div>
 </section>
+
+{approach_section(lang)}
 
 <section class="section">
   <div class="wrap">
@@ -568,16 +678,19 @@ def research(lang):
 
     blocks = []
     for a in AXES:
+        badge = "À venir" if lang == "fr" else "Upcoming"
         pubs = "".join(
+            f'''<li class="pub"><span class="pub-year">{y}</span><div>
+          <span class="pub-title">{title} <span class="badge">{badge}</span></span>
+          <span class="pub-meta">{authors}{" " + note[lang] if note else ""}</span></div></li>'''
+            for y, title, authors, note in a.get("upcoming", [])
+        )
+        pubs += "".join(
             f'''<li class="pub"><span class="pub-year">{y}</span><div>
           <a class="pub-title" href="https://doi.org/{doi}">{title}</a>
           <span class="pub-meta">{authors} {src}. doi:{doi}</span></div></li>'''
             for y, title, authors, src, doi in a["pubs"]
         )
-        if "extra" in a:
-            txt, badge = a["extra"][lang]
-            pubs += f'''<li class="pub"><span class="pub-year">{"Data" if lang == "en" else "Données"}</span><div>
-          <span class="pub-title">{txt} <span class="badge">{badge}</span></span></div></li>'''
         blocks.append(f'''<div class="axis-block split" id="{a["id"]}">
     <div>
       <span class="axis-label">{a["label"][lang]}</span>

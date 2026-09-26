@@ -312,6 +312,30 @@ a.lang-opt:hover { background: rgba(255,255,255,.1); color: #fff; }
   .axis + .axis { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); }
 }
 
+/* Approach diagram */
+.approach-fig { margin: 1.5rem 0 0; }
+.approach-svg { display: block; width: 100%; height: auto; margin-inline: auto; font-family: var(--font); }
+.approach-wide { max-width: 960px; }
+.approach-narrow { display: none; max-width: 420px; }
+@media (max-width: 640px) {
+  .approach-wide { display: none; }
+  .approach-narrow { display: block; }
+}
+.approach-svg .card { stroke: none; }
+.approach-svg .card.human { fill: var(--deep); }
+.approach-svg .card.machine { fill: var(--teal); }
+.approach-svg .card.goal { fill: var(--heat); }
+.approach-svg .lbl { fill: #fff; font-weight: 650; text-anchor: middle; dominant-baseline: middle; }
+.approach-svg .lbl-goal { fill: var(--abyss); font-weight: 700; }
+.approach-svg .link { fill: none; stroke: #8FA3B1; stroke-width: 2.5; }
+.approach-svg .arrowhead { fill: #8FA3B1; }
+.approach-svg .icon-line { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.approach-svg .icon-fill { fill: var(--ink); }
+.approach-svg .screen { fill: #fff; }
+.approach-svg .net line { stroke: var(--ink); stroke-width: 1.1; }
+.approach-svg .n-hid { fill: var(--ink); }
+.approach-svg .n-in { fill: #fff; stroke: var(--ink); stroke-width: 1.3; }
+
 /* Participate band */
 .participate { background: var(--deep); color: #fff; padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 .participate-inner {

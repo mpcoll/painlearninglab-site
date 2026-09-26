@@ -25,13 +25,13 @@ French is the default.
 ## Images
 
 Already in place: the lab logo (header and favicon), the Université Laval and Cirris logos (footer), the six funder
-logos, the three equipment photos, and portraits of Michel-Pierre Coll, Alyson Champagne, Mégane Lacombe-Thibault, Shima Hassanpour and Joshua Duquette.
+logos, the three equipment photos, and portraits of Michel-Pierre Coll, Alyson Champagne, Mégane Lacombe-Thibault, Shima Hassanpour, Joshua Duquette and Antoine Cyr-Bouchard.
 
 Still missing (a styled placeholder shows until the file exists). Save them with these exact names:
 
 - `assets/img/team/`: leane-beaulieu-laliberte.jpg, nicolas-roy.jpg, sanoussy-diallo.jpg,
-  pouya-rabei.jpg, audrey-lalancette.jpg, antoine-cyr-bouchard.jpg, lorie-eve-barette.jpg,
-  laurie-caumartin.jpg
+  pouya-rabiei.jpg, audrey-lalancette.jpg, lorie-eve-barrette.jpg,
+  laurie-caumartin.jpg, alysun-paradis.jpg
   (square or portrait works, at least 600 px wide; faces are framed slightly above centre)
 
 Funder logos live in `assets/img/funders/` (svg, png or jpg). A language-specific file (e.g. `cihr-fr.png`)
