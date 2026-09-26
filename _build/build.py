@@ -543,7 +543,7 @@ def home(lang):
             "fund_h": "Financement", "fund_more": "En savoir plus",
         },
         "en": {
-            "lead": "The laboratory's research program combines human brain imaging with cutting-edge computational modelling and artificial intelligence to better understand how pain is perceived and modulated under both normal and pathological conditions.",
+            "lead": "The laboratory's research program combines human brain imaging with computational modelling and artificial intelligence to better understand how pain is perceived and modulated under both normal and pathological conditions.",
             "b1": "Explore our research", "b2": "Take part in a study",
             "why_h": "Pain: a scientific and public health challenge",
             "why_k": "Why does chronic pain develop and persist in some people but not in others?",
