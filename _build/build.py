@@ -124,6 +124,10 @@ def header(lang, key):
       <img src="../assets/img/logo.png" alt="" width="36" height="36">
       <span class="brand-text"><span class="brand-small">{T["brand_small"][lang]}</span><span class="brand-name">{T["brand_name"][lang]}</span></span>
     </a>
+    <div class="partners">
+      <a href="https://www.ulaval.ca/"><img src="../assets/img/logos/ulaval-reversed.png" alt="Université Laval" width="70" height="29"></a>
+      <a href="https://www.cirris.ulaval.ca/"><img src="../assets/img/logos/cirris.png" alt="Cirris" width="127" height="29"></a>
+    </div>
     <nav class="nav" id="nav" aria-label="{T["nav"][lang]}"><ul>{"".join(items)}</ul></nav>
     <div class="lang" role="group" aria-label="{T["lang_group"][lang]}">
       <span class="lang-opt is-current" lang="{lang}">{lang.upper()}</span>

@@ -110,7 +110,6 @@ p { margin: 0 0 1em; max-width: 68ch; }
 
 .brand {
   display: flex; align-items: center; gap: .7rem;
-  margin-right: auto;
   color: #fff;
   text-decoration: none;
 }
@@ -118,6 +117,20 @@ p { margin: 0 0 1em; max-width: 68ch; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.12; }
 .brand-small { font-size: .74rem; color: #9FC3D0; }
 .brand-name { font-weight: 700; font-size: 1rem; }
+
+/* University and research-centre logos next to the lab name */
+.partners {
+  display: flex; align-items: center; gap: 1rem;
+  margin-right: auto; padding-left: 1.1rem;
+  border-left: 1px solid var(--line-dark);
+}
+.partners a { display: block; opacity: .92; }
+.partners a:hover { opacity: 1; }
+.partners img { display: block; height: 29px; width: auto; }
+@media (max-width: 1120px) {
+  .partners { display: none; }
+  .brand { margin-right: auto; }
+}
 
 .nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: .15rem; }
 .nav a {
