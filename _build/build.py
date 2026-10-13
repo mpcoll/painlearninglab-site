@@ -273,11 +273,12 @@ AXES = [
              "<i>2025 IEEE 35th International Workshop on Machine Learning for Signal Processing (MLSP)</i>, 1–6",
              "10.1109/MLSP62443.2025.11204206", "https://arxiv.org/abs/2508.11691"),
         ],
-        "upcoming": [  # (year, title, authors, note or None); listed before published work
+        "preprints": [  # (year, title, authors, doi); listed before published work, with a "Preprint" badge
             ("2026", "A comprehensive physiological dataset of pain and aversive modalities for pain biomarkers research",
-             "Champagne, A., Barrette, L.-E., Cyr-Bouchard, A., Roy, M., &amp; Coll, M.-P.", None),
+             "Champagne, A., Barrette, L.-E., Cyr-Bouchard, A., Roy, M., &amp; Coll, M.-P.", "10.64898/2026.09.29.755497"),
             ("2026", "Distinct EEG microstate signatures across different pain types",
-             "Rabiei, P., Champagne, A., Barrette, L.-È., Fakhry, N., Massé-Alarie, H., &amp; Coll, M.-P.", None),
+             "Rabiei, P., Champagne, A., Barrette, L.-È., Fakhry, N., Massé-Alarie, H., &amp; Coll, M.-P.",
+             "10.64898/2026.09.28.755184"),
         ],
     },
 ]
@@ -421,6 +422,10 @@ FIG_PAPERS = {
                  "10.1073/pnas.2119931119", "CC BY-NC-ND 4.0"),
     "pain2026": ("No effect of rhythmic visual stimulation on experimental pain perception", "<i>Pain</i>, 2026",
                  "10.1097/j.pain.0000000000004044", "CC BY-NC-ND 4.0"),
+    "dataset2026": ("A comprehensive physiological dataset of pain and aversive modalities for pain biomarkers research",
+                    "bioRxiv preprint, 2026", "10.64898/2026.09.29.755497", "CC BY 4.0"),
+    "microstates2026": ("Distinct EEG microstate signatures across different pain types", "bioRxiv preprint, 2026",
+                        "10.64898/2026.09.28.755184", "CC BY 4.0"),
     "mlsp2025": ("Towards Generalizable Learning Models for EEG-Based Identification of Pain Perception",
                  "IEEE MLSP, 2025 (arXiv preprint)", "https://arxiv.org/abs/2508.11691", None),
 }
@@ -431,6 +436,9 @@ FIGURES = {
         ("pnas2022-fig1.jpg", 1, "pnas2022"), ("pnas2022-fig2.jpg", 2, "pnas2022"), ("pnas2022-fig7.jpg", 7, "pnas2022"),
     ],
     "axis-2": [
+        ("dataset2026-fig1.jpg", 1, "dataset2026"), ("dataset2026-fig2.jpg", 2, "dataset2026"),
+        ("dataset2026-fig7.jpg", 7, "dataset2026"),
+        ("microstates2026-fig1.jpg", 1, "microstates2026"), ("microstates2026-fig2.jpg", 2, "microstates2026"),
         ("pain2026-fig1.jpg", 1, "pain2026"), ("pain2026-fig2.jpg", 2, "pain2026"), ("pain2026-fig4.jpg", 4, "pain2026"),
         ("mlsp2025-fig1.jpg", 1, "mlsp2025"), ("mlsp2025-fig2.jpg", 2, "mlsp2025"),
     ],
@@ -762,12 +770,12 @@ def research(lang):
 
     blocks = []
     for a in AXES:
-        badge = "À venir" if lang == "fr" else "Upcoming"
+        badge = "Prépublication" if lang == "fr" else "Preprint"
         pubs = "".join(
             f'''<li class="pub"><span class="pub-year">{y}</span><div>
-          <span class="pub-title">{title} <span class="badge">{badge}</span></span>
-          <span class="pub-meta">{authors}{" " + note[lang] if note else ""}</span></div></li>'''
-            for y, title, authors, note in a.get("upcoming", [])
+          <a class="pub-title" href="https://doi.org/{doi}">{title} <span class="badge">{badge}</span></a>
+          <span class="pub-meta">{authors} <i>bioRxiv</i>. doi:{doi}</span></div></li>'''
+            for y, title, authors, doi in a.get("preprints", [])
         )
         pubs += "".join(
             f'''<li class="pub"><span class="pub-year">{y}</span><div>

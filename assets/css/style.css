@@ -425,12 +425,12 @@ a.lang-opt:hover { background: rgba(255,255,255,.1); color: #fff; }
 /* Figure carousel under each research axis */
 .axis-block .carousel { margin-top: 1.75rem; max-width: 320px; }
 .carousel-nav { display: flex; align-items: center; justify-content: center; gap: .75rem; margin-top: .6rem; }
-.carousel-nav button {
+.carousel-nav > button {
   width: 2rem; height: 2rem; border-radius: 50%;
   border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
   font: inherit; font-size: 1.15rem; line-height: 1; cursor: pointer;
 }
-.carousel-nav button:hover { border-color: var(--teal-bright); color: var(--teal); }
+.carousel-nav > button:hover { border-color: var(--teal-bright); color: var(--teal); }
 .slides { position: relative; }
 .slide { margin: 0; }
 .slide[hidden] { display: none; }
